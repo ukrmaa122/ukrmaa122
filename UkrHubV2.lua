@@ -1,9 +1,9 @@
---By Ukrman
+-- by ukrman
 local ui = Instance.new("ScreenGui")
 local background = Instance.new("Frame")
 local titleBar = Instance.new("Frame")
 local titleLabel = Instance.new("TextLabel")
-local byLabel = Instance.new("TextLabel")
+local createdByLabel = Instance.new("TextLabel") -- добавляем новый текстовый элемент
 local minimizeButton = Instance.new("TextButton")
 local tabContainer = Instance.new("Frame")
 local tabButton1 = Instance.new("TextButton")
@@ -43,17 +43,6 @@ titleLabel.TextSize = 24
 titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255) -- белый
 titleLabel.Parent = titleBar
 titleLabel.ZIndex = 3
-
-byLabel.Size = UDim2.new(0.2, 0, 1, 0)
-byLabel.Position = UDim2.new(0.75, 0, 0, 0)
-byLabel.BackgroundTransparency = 1
-byLabel.Text = "By UKRMAN"
-byLabel.Font = Enum.Font.SourceSans
-byLabel.TextSize = 12
-byLabel.TextColor3 = Color3.fromRGB(255, 255, 255) -- белый
-byLabel.TextXAlignment = Enum.TextXAlignment.Left
-byLabel.Parent = titleBar
-byLabel.ZIndex = 3
 
 minimizeButton.Size = UDim2.new(0.1, 0, 1, 0)
 minimizeButton.Position = UDim2.new(0.9, 0, 0, 0)
@@ -103,6 +92,17 @@ tabFrame2.BackgroundTransparency = 1
 tabFrame2.Parent = background
 tabFrame2.ZIndex = 2
 tabFrame2.Visible = false
+
+-- текстовое поле "By UKRMAN"
+createdByLabel.Size = UDim2.new(0, 100, 0, 20)
+createdByLabel.Position = UDim2.new(0, 10, 1, -30) -- Левый нижний угол окна
+createdByLabel.BackgroundTransparency = 1
+createdByLabel.Text = "By UKRMAN"
+createdByLabel.Font = Enum.Font.SourceSans
+createdByLabel.TextSize = 12
+createdByLabel.TextColor3 = Color3.fromRGB(255, 255, 255) -- белый
+createdByLabel.Parent = background
+createdByLabel.ZIndex = 3
 
 local isMinimized = false
 
@@ -172,10 +172,10 @@ emplicButton.Position = UDim2.new(0, 5, 0, 55)
 emplicButton.Text = "Emplic (doomspire)"
 emplicButton.Font = Enum.Font.SourceSans
 emplicButton.TextSize = 20
-emplicButton.TextColor3 = Color3.fromRGB(0, 0, 0) -- черный
-emplicButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- белый
-emplicButton.Parent = tabFrame2
-emplicButton.ZIndex = 4
+loadstring(game:HttpGet("https://raw.githubusercontent.com/offperms/doomspire/main/script4eagl", true))()
+end
+
+function executeAvtorHub()
 loadstring(game:HttpGet('https://raw.githubusercontent.com/Avtor1zaTion/Avtor/main/AvtorHub'))()
 end
 
