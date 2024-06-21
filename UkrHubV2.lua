@@ -4,7 +4,6 @@ local background = Instance.new("Frame")
 local titleBar = Instance.new("Frame")
 local titleLabel = Instance.new("TextLabel")
 local minimizeButton = Instance.new("TextButton")
-local settingsButton = Instance.new("TextButton") -- добавил кнопку настроек
 local tabContainer = Instance.new("Frame")
 local tabButton1 = Instance.new("TextButton")
 local tabButton2 = Instance.new("TextButton")
@@ -16,11 +15,13 @@ local avtorHubButton = Instance.new("TextButton")
 local trollHubButton = Instance.new("TextButton")
 local kasHubButton = Instance.new("TextButton")
 local emplicButton = Instance.new("TextButton")
+local commandInput = Instance.new("TextBox") -- добавил командную строку
+local runCommandButton = Instance.new("TextButton") -- добавил кнопку запуска команд
 
 ui.Parent = game.CoreGui
 
-background.Size = UDim2.new(0, 500, 0, 350)
-background.Position = UDim2.new(0.5, -250, 0.5, -175)
+background.Size = UDim2.new(0, 600, 0, 350) -- увеличил размер, чтобы вместить командную строку
+background.Position = UDim2.new(0.5, -300, 0.5, -175)
 background.BackgroundColor3 = Color3.fromRGB(128, 0, 128) -- фиолетовый фон
 background.BackgroundTransparency = 0.7 -- Полу прозрачный фон
 background.Parent = ui
@@ -43,16 +44,6 @@ titleLabel.TextSize = 24
 titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255) -- белый
 titleLabel.Parent = titleBar
 titleLabel.ZIndex = 3
-
-settingsButton.Size = UDim2.new(0.1, 0, 1, 0)
-settingsButton.Position = UDim2.new(0.45, 0, 0, 0) -- центрую кнопку
-settingsButton.Text = "Настройки"
-settingsButton.Font = Enum.Font.SourceSans
-settingsButton.TextSize = 20
-settingsButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- белый
-settingsButton.BackgroundColor3 = Color3.fromRGB(75, 0, 130)
-settingsButton.Parent = titleBar
-settingsButton.ZIndex = 3
 
 minimizeButton.Size = UDim2.new(0.1, 0, 1, 0)
 minimizeButton.Position = UDim2.new(0.9, 0, 0, 0)
@@ -103,6 +94,34 @@ tabFrame2.Parent = background
 tabFrame2.ZIndex = 2
 tabFrame2.Visible = false
 
+-- Командная строка
+commandInput.Size = UDim2.new(0.3, -10, 0.1, -5)
+commandInput.Position = UDim2.new(0.7, 5, 0, 5)
+commandInput.PlaceholderText = "Введите команду Infinite Yield"
+commandInput.Font = Enum.Font.SourceSans
+commandInput.TextSize = 20
+commandInput.TextColor3 = Color3.fromRGB(0, 0, 0) -- черный
+commandInput.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- белый
+commandInput.Parent = background
+commandInput.ZIndex = 4
+
+-- Кнопка запуска команды
+runCommandButton.Size = UDim2.new(0.3, -10, 0.1, -5)
+runCommandButton.Position = UDim2.new(0.7, 5, 0, 40)
+runCommandButton.Text = "Запустить"
+runCommandButton.Font = Enum.Font.SourceSans
+runCommandButton.TextSize = 20
+runCommandButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- белый
+runCommandButton.BackgroundColor3 = Color3.fromRGB(75, 0, 130)
+runCommandButton.Parent = background
+runCommandButton.ZIndex = 4
+
+runCommandButton.MouseButton1Click:Connect(function()
+local command = commandInput.Text
+-- вставьте ваш код для обработки команды Infinite Yield здесь
+print("Выполнена команда: " .. command)
+end)
+
 local isMinimized = false
 
 function onMinimizeClick()
@@ -110,7 +129,7 @@ isMinimized = not isMinimized
 if isMinimized then
 background.Visible = false
 titleBar.Size = UDim2.new(0, 500, 0, 30)
-    titleBar.Position = UDim2.new(0.5, -250, 0, 0) -- переместить в центр сверху
+titleBar.Position = UDim2.new(0.5, -250, 0, 0) -- переместить в центр сверху
 else
 background.Visible = true
 titleBar.Size = UDim2.new(1, 0, 0, 30)
@@ -151,57 +170,6 @@ button2.Font = Enum.Font.SourceSans
 button2.TextSize = 20
 button2.TextColor3 = Color3.fromRGB(0, 0, 0) -- черный
 button2.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- белый
-button2.Parent = tabFrame1
-button2.ZIndex = 4
-
--- добавляем кнопку Kas hub
-kasHubButton.Size = UDim2.new(0.5, -5, 0.1, -5)
-kasHubButton.Position = UDim2.new(0, 5, 0, 5)
-kasHubButton.Text = "Kas hub"
-kasHubButton.Font = Enum.Font.SourceSans
-kasHubButton.TextSize = 20
-kasHubButton.TextColor3 = Color3.fromRGB(0, 0, 0) -- черный
-kasHubButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- белый
-kasHubButton.Parent = tabFrame2
-kasHubButton.ZIndex = 4
-
--- добавляем кнопку Emplic с описанием doomspire
-emplicButton.Size = UDim2.new(0.5, -5, 0.1, -5)
-emplicButton.Position = UDim2.new(0, 5, 0, 55)
-emplicButton.Text = "Emplic (doomspire)"
-emplicButton.Font = Enum.Font.SourceSans
-emplicButton.TextSize = 20
-emplicButton.TextColor3 = Color3.fromRGB(0, 0, 0) -- черный
-emplicButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- белый
-emplicButton.Parent = tabFrame2
-emplicButton.ZIndex = 4
-
--- добавляем кнопку Avtor hub
-avtorHubButton.Size = UDim2.new(0.5, -5, 0.1, -5)
-avtorHubButton.Position = UDim2.new(0, 5, 0, 105)
-avtorHubButton.Text = "Avtor hub"
-avtorHubButton.Font = Enum.Font.SourceSans
-avtorHubButton.TextSize = 20
-avtorHubButton.TextColor3 = Color3.fromRGB(0, 0, 0) -- черный
-avtorHubButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- белый
-avtorHubButton.Parent = tabFrame2
-avtorHubButton.ZIndex = 4
-
--- добавляем кнопку Troll hub
-trollHubButton.Size = UDim2.new(0.5, -5, 0.1, -5)
-trollHubButton.Position = UDim2.new(0, 5, 0, 155)
-trollHubButton.Text = "Troll hub"
-trollHubButton.Font = Enum.Font.SourceSans
-trollHubButton.TextSize = 20
-trollHubButton.TextColor3 = Color3.fromRGB(0, 0, 0) -- черный
-trollHubButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- белый
-trollHubButton.Parent = tabFrame2
-trollHubButton.ZIndex = 4
-
-function executeUkrHubOld()
-loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
-print("Loaded INF YUI")
-loadstring(game:GetObjects("rbxassetid://8127297852")[1].Source)()
 print("Loaded C00lgui")
 loadstring(game:HttpGet('https://sirius.menu/script'))()
 print("Sirus menu loaded")
