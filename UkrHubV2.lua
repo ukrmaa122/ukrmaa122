@@ -4,6 +4,7 @@ local background = Instance.new("Frame")
 local titleBar = Instance.new("Frame")
 local titleLabel = Instance.new("TextLabel")
 local minimizeButton = Instance.new("TextButton")
+local settingsButton = Instance.new("TextButton") -- добавил кнопку настроек
 local tabContainer = Instance.new("Frame")
 local tabButton1 = Instance.new("TextButton")
 local tabButton2 = Instance.new("TextButton")
@@ -42,6 +43,16 @@ titleLabel.TextSize = 24
 titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255) -- белый
 titleLabel.Parent = titleBar
 titleLabel.ZIndex = 3
+
+settingsButton.Size = UDim2.new(0.1, 0, 1, 0)
+settingsButton.Position = UDim2.new(0.45, 0, 0, 0) -- центрую кнопку
+settingsButton.Text = "Настройки"
+settingsButton.Font = Enum.Font.SourceSans
+settingsButton.TextSize = 20
+settingsButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- белый
+settingsButton.BackgroundColor3 = Color3.fromRGB(75, 0, 130)
+settingsButton.Parent = titleBar
+settingsButton.ZIndex = 3
 
 minimizeButton.Size = UDim2.new(0.1, 0, 1, 0)
 minimizeButton.Position = UDim2.new(0.9, 0, 0, 0)
@@ -99,7 +110,7 @@ isMinimized = not isMinimized
 if isMinimized then
 background.Visible = false
 titleBar.Size = UDim2.new(0, 500, 0, 30)
-titleBar.Position = UDim2.new(0.5, -250, 0, 0) -- переместить в центр сверху
+    titleBar.Position = UDim2.new(0.5, -250, 0, 0) -- переместить в центр сверху
 else
 background.Visible = true
 titleBar.Size = UDim2.new(1, 0, 0, 30)
@@ -121,6 +132,7 @@ end
 
 tabButton1.MouseButton1Click:Connect(onTabClick1)
 tabButton2.MouseButton1Click:Connect(onTabClick2)
+
 -- создаем кнопки и добавляем их на первый фрейм
 button1.Size = UDim2.new(0.5, -5, 0.1, -5)
 button1.Position = UDim2.new(0, 5, 0, 5)
@@ -173,5 +185,58 @@ avtorHubButton.TextSize = 20
 avtorHubButton.TextColor3 = Color3.fromRGB(0, 0, 0) -- черный
 avtorHubButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- белый
 avtorHubButton.Parent = tabFrame2
+avtorHubButton.ZIndex = 4
+
+-- добавляем кнопку Troll hub
+trollHubButton.Size = UDim2.new(0.5, -5, 0.1, -5)
+trollHubButton.Position = UDim2.new(0, 5, 0, 155)
+trollHubButton.Text = "Troll hub"
+trollHubButton.Font = Enum.Font.SourceSans
+trollHubButton.TextSize = 20
+trollHubButton.TextColor3 = Color3.fromRGB(0, 0, 0) -- черный
+trollHubButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- белый
+trollHubButton.Parent = tabFrame2
+trollHubButton.ZIndex = 4
+
+function executeUkrHubOld()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+print("Loaded INF YUI")
+loadstring(game:GetObjects("rbxassetid://8127297852")[1].Source)()
+print("Loaded C00lgui")
+loadstring(game:HttpGet('https://sirius.menu/script'))()
+print("Sirus menu loaded")
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yofriendfromschool1/Sky-Hub/main/FE%20Trolling%20GUI.luau"))()
+print("Loaded Troll hub")
+wait(1)
+print("UkrKid Pack Loaded")
+end
+
+function executeUkrHubMiniOld()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+print("Loaded INF YUI")
+loadstring(game:HttpGet('https://sirius.menu/script'))()
+print("Sirus menu loaded")
+end
+
+function executeKasHub()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/KaSpEr-tv123/kas-hub-script/main/script.lua"))()
+end
+
+function executeEmplic()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/offperms/doomspire/main/script4eagl", true))()
+end
+
+function executeAvtorHub()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Avtor1zaTion/Avtor/main/AvtorHub'))()
+end
+
+function executeTrollHub()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yofriendfromschool1/Sky-Hub/main/FE%20Trolling%20GUI.luau"))()
+end
+
+button1.MouseButton1Click:Connect(executeUkrHubOld)
+button2.MouseButton1Click:Connect(executeUkrHubMiniOld)
+kasHubButton.MouseButton1Click:Connect(executeKasHub)
+emplicButton.MouseButton1Click:Connect(executeEmplic)
 avtorHubButton.MouseButton1Click:Connect(executeAvtorHub)
 trollHubButton.MouseButton1Click:Connect(executeTrollHub)
