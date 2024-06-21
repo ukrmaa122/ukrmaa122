@@ -3,7 +3,6 @@ local ui = Instance.new("ScreenGui")
 local background = Instance.new("Frame")
 local titleBar = Instance.new("Frame")
 local titleLabel = Instance.new("TextLabel")
-local createdByLabel = Instance.new("TextLabel") -- добавляем новый текстовый элемент
 local minimizeButton = Instance.new("TextButton")
 local tabContainer = Instance.new("Frame")
 local tabButton1 = Instance.new("TextButton")
@@ -34,7 +33,7 @@ titleBar.BackgroundColor3 = Color3.fromRGB(75, 0, 130) -- темно-фиоле�
 titleBar.Parent = background
 titleBar.ZIndex = 2
 
-titleLabel.Size = UDim2.new(0.7, 0, 1, 0)
+titleLabel.Size = UDim2.new(0.9, 0, 1, 0)
 titleLabel.Position = UDim2.new(0.05, 0, 0, 0)
 titleLabel.BackgroundTransparency = 1
 titleLabel.Text = "UkrHub V2"
@@ -93,17 +92,6 @@ tabFrame2.Parent = background
 tabFrame2.ZIndex = 2
 tabFrame2.Visible = false
 
--- текстовое поле "By UKRMAN"
-createdByLabel.Size = UDim2.new(0, 100, 0, 20)
-createdByLabel.Position = UDim2.new(0, 10, 1, -30) -- Левый нижний угол окна
-createdByLabel.BackgroundTransparency = 1
-createdByLabel.Text = "By UKRMAN"
-createdByLabel.Font = Enum.Font.SourceSans
-createdByLabel.TextSize = 12
-createdByLabel.TextColor3 = Color3.fromRGB(255, 255, 255) -- белый
-createdByLabel.Parent = background
-createdByLabel.ZIndex = 3
-
 local isMinimized = false
 
 function onMinimizeClick()
@@ -133,7 +121,6 @@ end
 
 tabButton1.MouseButton1Click:Connect(onTabClick1)
 tabButton2.MouseButton1Click:Connect(onTabClick2)
-
 -- создаем кнопки и добавляем их на первый фрейм
 button1.Size = UDim2.new(0.5, -5, 0.1, -5)
 button1.Position = UDim2.new(0, 5, 0, 5)
@@ -172,20 +159,19 @@ emplicButton.Position = UDim2.new(0, 5, 0, 55)
 emplicButton.Text = "Emplic (doomspire)"
 emplicButton.Font = Enum.Font.SourceSans
 emplicButton.TextSize = 20
-loadstring(game:HttpGet("https://raw.githubusercontent.com/offperms/doomspire/main/script4eagl", true))()
-end
+emplicButton.TextColor3 = Color3.fromRGB(0, 0, 0) -- черный
+emplicButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- белый
+emplicButton.Parent = tabFrame2
+emplicButton.ZIndex = 4
 
-function executeAvtorHub()
-loadstring(game:HttpGet('https://raw.githubusercontent.com/Avtor1zaTion/Avtor/main/AvtorHub'))()
-end
-
-function executeTrollHub()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/yofriendfromschool1/Sky-Hub/main/FE%20Trolling%20GUI.luau"))()
-end
-
-button1.MouseButton1Click:Connect(executeUkrHubOld)
-button2.MouseButton1Click:Connect(executeUkrHubMiniOld)
-kasHubButton.MouseButton1Click:Connect(executeKasHub)
-emplicButton.MouseButton1Click:Connect(executeEmplic)
+-- добавляем кнопку Avtor hub
+avtorHubButton.Size = UDim2.new(0.5, -5, 0.1, -5)
+avtorHubButton.Position = UDim2.new(0, 5, 0, 105)
+avtorHubButton.Text = "Avtor hub"
+avtorHubButton.Font = Enum.Font.SourceSans
+avtorHubButton.TextSize = 20
+avtorHubButton.TextColor3 = Color3.fromRGB(0, 0, 0) -- черный
+avtorHubButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- белый
+avtorHubButton.Parent = tabFrame2
 avtorHubButton.MouseButton1Click:Connect(executeAvtorHub)
 trollHubButton.MouseButton1Click:Connect(executeTrollHub)
