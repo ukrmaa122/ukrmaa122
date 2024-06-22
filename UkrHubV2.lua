@@ -15,13 +15,11 @@ local avtorHubButton = Instance.new("TextButton")
 local trollHubButton = Instance.new("TextButton")
 local kasHubButton = Instance.new("TextButton")
 local emplicButton = Instance.new("TextButton")
-local commandInput = Instance.new("TextBox") -- добавил командную строку
-local runCommandButton = Instance.new("TextButton") -- добавил кнопку запуска команд
 
 ui.Parent = game.CoreGui
 
-background.Size = UDim2.new(0, 600, 0, 350) -- увеличил размер, чтобы вместить командную строку
-background.Position = UDim2.new(0.5, -300, 0.5, -175)
+background.Size = UDim2.new(0, 500, 0, 350)
+background.Position = UDim2.new(0.5, -250, 0.5, -175)
 background.BackgroundColor3 = Color3.fromRGB(128, 0, 128) -- фиолетовый фон
 background.BackgroundTransparency = 0.7 -- Полу прозрачный фон
 background.Parent = ui
@@ -94,34 +92,6 @@ tabFrame2.Parent = background
 tabFrame2.ZIndex = 2
 tabFrame2.Visible = false
 
--- Командная строка
-commandInput.Size = UDim2.new(0.3, -10, 0.1, -5)
-commandInput.Position = UDim2.new(0.7, 5, 0, 5)
-commandInput.PlaceholderText = "Введите команду Infinite Yield"
-commandInput.Font = Enum.Font.SourceSans
-commandInput.TextSize = 20
-commandInput.TextColor3 = Color3.fromRGB(0, 0, 0) -- черный
-commandInput.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- белый
-commandInput.Parent = background
-commandInput.ZIndex = 4
-
--- Кнопка запуска команды
-runCommandButton.Size = UDim2.new(0.3, -10, 0.1, -5)
-runCommandButton.Position = UDim2.new(0.7, 5, 0, 40)
-runCommandButton.Text = "Запустить"
-runCommandButton.Font = Enum.Font.SourceSans
-runCommandButton.TextSize = 20
-runCommandButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- белый
-runCommandButton.BackgroundColor3 = Color3.fromRGB(75, 0, 130)
-runCommandButton.Parent = background
-runCommandButton.ZIndex = 4
-
-runCommandButton.MouseButton1Click:Connect(function()
-local command = commandInput.Text
--- вставьте ваш код для обработки команды Infinite Yield здесь
-print("Выполнена команда: " .. command)
-end)
-
 local isMinimized = false
 
 function onMinimizeClick()
@@ -151,7 +121,6 @@ end
 
 tabButton1.MouseButton1Click:Connect(onTabClick1)
 tabButton2.MouseButton1Click:Connect(onTabClick2)
-
 -- создаем кнопки и добавляем их на первый фрейм
 button1.Size = UDim2.new(0.5, -5, 0.1, -5)
 button1.Position = UDim2.new(0, 5, 0, 5)
@@ -170,41 +139,39 @@ button2.Font = Enum.Font.SourceSans
 button2.TextSize = 20
 button2.TextColor3 = Color3.fromRGB(0, 0, 0) -- черный
 button2.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- белый
-print("Loaded C00lgui")
-loadstring(game:HttpGet('https://sirius.menu/script'))()
-print("Sirus menu loaded")
-loadstring(game:HttpGet("https://raw.githubusercontent.com/yofriendfromschool1/Sky-Hub/main/FE%20Trolling%20GUI.luau"))()
-print("Loaded Troll hub")
-wait(1)
-print("UkrKid Pack Loaded")
-end
+button2.Parent = tabFrame1
+button2.ZIndex = 4
 
-function executeUkrHubMiniOld()
-loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
-print("Loaded INF YUI")
-loadstring(game:HttpGet('https://sirius.menu/script'))()
-print("Sirus menu loaded")
-end
+-- добавляем кнопку Kas hub
+kasHubButton.Size = UDim2.new(0.5, -5, 0.1, -5)
+kasHubButton.Position = UDim2.new(0, 5, 0, 5)
+kasHubButton.Text = "Kas hub"
+kasHubButton.Font = Enum.Font.SourceSans
+kasHubButton.TextSize = 20
+kasHubButton.TextColor3 = Color3.fromRGB(0, 0, 0) -- черный
+kasHubButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- белый
+kasHubButton.Parent = tabFrame2
+kasHubButton.ZIndex = 4
 
-function executeKasHub()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/KaSpEr-tv123/kas-hub-script/main/script.lua"))()
-end
+-- добавляем кнопку Emplic с описанием doomspire
+emplicButton.Size = UDim2.new(0.5, -5, 0.1, -5)
+emplicButton.Position = UDim2.new(0, 5, 0, 55)
+emplicButton.Text = "Emplic (doomspire)"
+emplicButton.Font = Enum.Font.SourceSans
+emplicButton.TextSize = 20
+emplicButton.TextColor3 = Color3.fromRGB(0, 0, 0) -- черный
+emplicButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- белый
+emplicButton.Parent = tabFrame2
+emplicButton.ZIndex = 4
 
-function executeEmplic()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/offperms/doomspire/main/script4eagl", true))()
-end
-
-function executeAvtorHub()
-loadstring(game:HttpGet('https://raw.githubusercontent.com/Avtor1zaTion/Avtor/main/AvtorHub'))()
-end
-
-function executeTrollHub()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/yofriendfromschool1/Sky-Hub/main/FE%20Trolling%20GUI.luau"))()
-end
-
-button1.MouseButton1Click:Connect(executeUkrHubOld)
-button2.MouseButton1Click:Connect(executeUkrHubMiniOld)
-kasHubButton.MouseButton1Click:Connect(executeKasHub)
-emplicButton.MouseButton1Click:Connect(executeEmplic)
+-- добавляем кнопку Avtor hub
+avtorHubButton.Size = UDim2.new(0.5, -5, 0.1, -5)
+avtorHubButton.Position = UDim2.new(0, 5, 0, 105)
+avtorHubButton.Text = "Avtor hub"
+avtorHubButton.Font = Enum.Font.SourceSans
+avtorHubButton.TextSize = 20
+avtorHubButton.TextColor3 = Color3.fromRGB(0, 0, 0) -- черный
+avtorHubButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- белый
+avtorHubButton.Parent = tabFrame2
 avtorHubButton.MouseButton1Click:Connect(executeAvtorHub)
 trollHubButton.MouseButton1Click:Connect(executeTrollHub)
