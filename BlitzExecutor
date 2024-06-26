@@ -89,7 +89,7 @@ TabsFrame.Size = UDim2.new(0.15, 0, 0.75, 0)
 
 AddTabButton.Parent = Frame
 AddTabButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-AddTabButton.Position = UDim2.new(0.05, 0, 0.9, 0)
+AddTabButton.Position = UDim2.new(0.05, 0, 0.85, 0)
 AddTabButton.Size = UDim2.new(0.1, 0, 0.05, 0)
 AddTabButton.Text = "+"
 AddTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -98,9 +98,9 @@ AddTabButton.TextScaled = true
 ErrorLabel.Parent = Frame
 ErrorLabel.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 ErrorLabel.BackgroundTransparency = 1
-ErrorLabel.Position = UDim2.new(0.2, 0, 0.9, 0)
-ErrorLabel.Size = UDim2.new(0.6, 0, 0.1, 0)
-ErrorLabel.Text = "Cannot create more than 5 tabs!"
+ErrorLabel.Position = UDim2.new(0, 0, 0.025, 0)
+ErrorLabel.Size = UDim2.new(1, 0, 0.05, 0)
+ErrorLabel.Text = "Cannot create more tabs!"
 ErrorLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 ErrorLabel.TextScaled = true
 ErrorLabel.Visible = false
@@ -122,22 +122,16 @@ local tabTextBoxes = {}
 local currentTextBox
 
 local function updateTabPositions()
+local index = 0
 for i, button in ipairs(TabsFrame:GetChildren()) do
 if button:IsA("TextButton") and button ~= AddTabButton then
-button.Position = UDim2.new(0, 0, (i - 1) * 0.15, 0)
-button.Text = "Tab " .. tostring(i)
+button.Position = UDim2.new(0, 0, index * 0.2, 0)
+index = index + 1
 end
 end
 end
 
 local function createNewTab()
-if tabCount >= 5 then
-ErrorLabel.Visible = true
-wait(2)
-ErrorLabel.Visible = false
-return
-end
-
 tabCount = tabCount + 1
 local tabIndex = tabCount
 
@@ -145,7 +139,7 @@ local tabButton = Instance.new("TextButton")
 tabButton.Parent = TabsFrame
 tabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 tabButton.Size = UDim2.new(1, -30, 0, 30)
-tabButton.Position = UDim2.new(0, 0, (tabIndex - 1) * 0.075, 0)
+tabButton.Position = UDim2.new(0, 0, (tabIndex - 1) * 0.2, 0)
 tabButton.Text = "Tab " .. tabIndex
 tabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 
@@ -184,8 +178,9 @@ tabCount = tabCount - 1
 table.remove(tabTextBoxes, tabIndex)
 updateTabPositions()
 end)
-end
 
+updateTabPositions()
+end
 createNewTab()
 
 ExecuteButton.MouseButton1Click:Connect(function()
@@ -207,12 +202,19 @@ end
 end)
 
 AddTabButton.MouseButton1Click:Connect(function()
+if tabCount < 10 then
 createNewTab()
+else
+ErrorLabel.Visible = true
+wait(2)
+ErrorLabel.Visible = false
+end
 end)
 
 CloseButton.MouseButton1Click:Connect(function()
 ScreenGui:Destroy()
 end)
+
 -- Скрываем кнопки Execute и Remove по умолчанию
 ExecuteButton.Visible = false
 RemoveButton.Visible = false
