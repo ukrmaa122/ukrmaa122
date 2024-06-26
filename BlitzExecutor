@@ -43,13 +43,12 @@ LoadingGui:Destroy()
 local ScreenGui = Instance.new("ScreenGui")
 local Frame = Instance.new("Frame")
 local UIGradient = Instance.new("UIGradient")
-local TextBox = Instance.new("TextBox")
 local ExecuteButton = Instance.new("TextButton")
 local RemoveButton = Instance.new("TextButton")
 local TitleBar = Instance.new("TextLabel")
 local CloseButton = Instance.new("TextButton")
 local TabsFrame = Instance.new("Frame")
-local Tab1Button = Instance.new("TextButton")
+local AddTabButton = Instance.new("TextButton")
 
 -- устанавливаем свойства основного GUI
 ScreenGui.Parent = game.CoreGui
@@ -82,53 +81,132 @@ CloseButton.Size = UDim2.new(0, 25, 0, 25)
 CloseButton.Text = "X"
 CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 
+-- Контейнер для вкладок
 TabsFrame.Parent = Frame
 TabsFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 TabsFrame.Position = UDim2.new(0, 0, 0.1, 0)
 TabsFrame.Size = UDim2.new(0.15, 0, 0.9, 0)
 
-Tab1Button.Parent = TabsFrame
-Tab1Button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-Tab1Button.Size = UDim2.new(1, 0, 0, 30)
-Tab1Button.Text = "Tab 1"
-Tab1Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+-- Кнопка добавления новой вкладки
+AddTabButton.Parent = Frame
+AddTabButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+AddTabButton.Position = UDim2.new(0.05, 0, 0.85, 0)
+AddTabButton.Size = UDim2.new(0.05, 0, 0.05, 0)
+AddTabButton.Text = "+"
+AddTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+AddTabButton.TextScaled = true
 
-TextBox.Parent = Frame
-TextBox.BackgroundColor3 = Color3.fromRGB(245, 245, 245)
-TextBox.Position = UDim2.new(0.2, 0, 0.2, 0)
-TextBox.Size = UDim2.new(0.75, 0, 0.55, 0)
-TextBox.Text = ""
-TextBox.TextXAlignment = Enum.TextXAlignment.Left
-TextBox.TextYAlignment = Enum.TextYAlignment.Top
-
+-- Кнопка исполнения скрипта
 ExecuteButton.Parent = Frame
 ExecuteButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 ExecuteButton.Position = UDim2.new(0.2, 0, 0.85, 0)
 ExecuteButton.Size = UDim2.new(0.25, 0, 0.1, 0)
 ExecuteButton.Text = "Execute"
 
+-- Кнопка удаления текста из поля ввода
 RemoveButton.Parent = Frame
 RemoveButton.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
 RemoveButton.Position = UDim2.new(0.55, 0, 0.85, 0)
 RemoveButton.Size = UDim2.new(0.25, 0, 0.1, 0)
 RemoveButton.Text = "Remove"
--- добавляем функциональность для закрытия окна
-CloseButton.MouseButton1Click:Connect(function()
-ScreenGui:Destroy()
+
+-- Функция создания новой вкладки с полями
+local tabCount = 0
+local tabTextBoxes = {}
+local currentTextBox
+
+local function createNewTab()
+tabCount = tabCount + 1
+local tabName = "Tab " .. tostring(tabCount)
+
+local tabButton = Instance.new("TextButton")
+tabButton.Parent = TabsFrame
+tabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+tabButton.Size = UDim2.new(1, -25, 0, 30)
+tabButton.Position = UDim2.new(0, 0, (tabCount - 1) * 0.15, 0)
+tabButton.Text = tabName
+tabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local closeButton = Instance.new("TextButton")
+closeButton.Parent = tabButton
+closeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+closeButton.Size = UDim2.new(0, 25, 0, 30)
+closeButton.Position = UDim2.new(1, 0, 0, 0)
+closeButton.Text = "X"
+closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local textBox = Instance.new("TextBox")
+textBox.Parent = Frame
+textBox.BackgroundColor3 = Color3.fromRGB(245, 245, 245)
+textBox.Size = UDim2.new(0.75, 0, 0.55, 0)
+textBox.Position = UDim2.new(0.2, 0, 0.2, 0)
+textBox.TextXAlignment = Enum.TextXAlignment.Left
+textBox.TextYAlignment = Enum.TextYAlignment.Top
+textBox.Visible = false -- Скрыть текстовое поле до выбора вкладки
+
+-- добавляем обработку открытия вкладки
+tabButton.MouseButton1Click:Connect(function()
+for _, box in pairs(tabTextBoxes) do
+box.Visible = false -- Скрыть все поля
+end
+textBox.Visible = true -- Показать текущее поле
+currentTextBox = textBox -- Устанавливаем текущее активное текстовое поле
 end)
 
--- добавляем функциональность кнопке execute
-ExecuteButton.MouseButton1Click:Connect(function()
-local luaScript = TextBox.Text
-local success, error = pcall(function()
-loadstring(luaScript)()
-end)
-if not success then
-warn("Ошибка выполнения скрипта:", error)
+-- добавляем обработку удаления вкладки
+closeButton.MouseButton1Click:Connect(function()
+-- Удаляем вкладку и текстовое поле
+tabButton:Destroy()
+closeButton:Destroy()
+textBox:Destroy()
+tabTextBoxes[tabCount] = nil
+
+-- Переупорядочиваем оставшиеся вкладки
+tabCount = tabCount - 1
+local index = 1
+for _, btn in ipairs(TabsFrame:GetChildren()) do
+if btn:IsA("TextButton") and btn ~= AddTabButton then
+btn.Position = UDim2.new(0, 0, (index - 1) * 0.15, 0)
+btn.Text = "Tab " .. index
+index = index + 1
+end
 end
 end)
 
--- добавляем функциональность кнопке remove
+-- сохраняем текстовое поле в таблицу
+table.insert(tabTextBoxes, textBox)
+end
+
+-- добавляем первую вкладку
+createNewTab()
+[]
+-- функции нажатия кнопок управления скриптами
+-- исполнение скрипта из активного текстового поля
+ExecuteButton.MouseButton1Click:Connect(function()
+if currentTextBox then
+local scriptText = currentTextBox.Text
+local success, errorMsg = pcall(function()
+loadstring(scriptText)() -- Исполняем скрипт
+end)
+if not success and errorMsg then
+warn("Error executing the script: ", errorMsg)
+end
+end
+end)
+
+-- очистка активного текстового поля
 RemoveButton.MouseButton1Click:Connect(function()
-TextBox.Text = ""
+if currentTextBox then
+currentTextBox.Text = "" -- Очищаем текст
+end
+end)
+
+-- добавление новой вкладки
+AddTabButton.MouseButton1Click:Connect(function()
+createNewTab()
+end)
+
+-- закрытие GUI
+CloseButton.MouseButton1Click:Connect(function()
+ScreenGui:Destroy() -- Удаление всего GUI
 end)
