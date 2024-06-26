@@ -179,7 +179,6 @@ end
 
 -- добавляем первую вкладку
 createNewTab()
-[]
 -- функции нажатия кнопок управления скриптами
 -- исполнение скрипта из активного текстового поля
 ExecuteButton.MouseButton1Click:Connect(function()
