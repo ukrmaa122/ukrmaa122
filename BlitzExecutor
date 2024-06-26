@@ -81,50 +81,54 @@ CloseButton.Size = UDim2.new(0, 25, 0, 25)
 CloseButton.Text = "X"
 CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 
--- Контейнер для вкладок
 TabsFrame.Parent = Frame
 TabsFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 TabsFrame.Position = UDim2.new(0, 0, 0.1, 0)
-TabsFrame.Size = UDim2.new(0.15, 0, 0.9, 0)
+TabsFrame.Size = UDim2.new(0.15, 0, 0.7, 0)
 
--- Кнопка добавления новой вкладки
 AddTabButton.Parent = Frame
 AddTabButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 AddTabButton.Position = UDim2.new(0.05, 0, 0.85, 0)
-AddTabButton.Size = UDim2.new(0.05, 0, 0.05, 0)
+AddTabButton.Size = UDim2.new(0.05, 0, 0.075, 0)
 AddTabButton.Text = "+"
 AddTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 AddTabButton.TextScaled = true
 
--- Кнопка исполнения скрипта
 ExecuteButton.Parent = Frame
 ExecuteButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 ExecuteButton.Position = UDim2.new(0.2, 0, 0.85, 0)
 ExecuteButton.Size = UDim2.new(0.25, 0, 0.1, 0)
 ExecuteButton.Text = "Execute"
 
--- Кнопка удаления текста из поля ввода
 RemoveButton.Parent = Frame
 RemoveButton.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
 RemoveButton.Position = UDim2.new(0.55, 0, 0.85, 0)
 RemoveButton.Size = UDim2.new(0.25, 0, 0.1, 0)
 RemoveButton.Text = "Remove"
 
--- Функция создания новой вкладки с полями
 local tabCount = 0
 local tabTextBoxes = {}
 local currentTextBox
 
+local function updateTabPositions()
+for i, button in ipairs(TabsFrame:GetChildren()) do
+if button:IsA("TextButton") and button ~= AddTabButton then
+button.Position = UDim2.new(0, 0, (i - 1) * 0.3, 0)
+button.Text = "Tab " .. tostring(i)
+end
+end
+end
+
 local function createNewTab()
 tabCount = tabCount + 1
-local tabName = "Tab " .. tostring(tabCount)
+local tabIndex = tabCount
 
 local tabButton = Instance.new("TextButton")
 tabButton.Parent = TabsFrame
 tabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-tabButton.Size = UDim2.new(1, -25, 0, 30)
-tabButton.Position = UDim2.new(0, 0, (tabCount - 1) * 0.15, 0)
-tabButton.Text = tabName
+tabButton.Size = UDim2.new(1, -30, 0, 30)
+tabButton.Position = UDim2.new(0, 0, (tabIndex - 1) * 0.15, 0)
+tabButton.Text = "Tab " .. tabIndex
 tabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 local closeButton = Instance.new("TextButton")
@@ -142,50 +146,36 @@ textBox.Size = UDim2.new(0.75, 0, 0.55, 0)
 textBox.Position = UDim2.new(0.2, 0, 0.2, 0)
 textBox.TextXAlignment = Enum.TextXAlignment.Left
 textBox.TextYAlignment = Enum.TextYAlignment.Top
-textBox.Visible = false -- Скрыть текстовое поле до выбора вкладки
+textBox.Visible = false
 
--- добавляем обработку открытия вкладки
+tabTextBoxes[tabIndex] = textBox
 tabButton.MouseButton1Click:Connect(function()
 for _, box in pairs(tabTextBoxes) do
-box.Visible = false -- Скрыть все поля
+box.Visible = false
 end
-textBox.Visible = true -- Показать текущее поле
-currentTextBox = textBox -- Устанавливаем текущее активное текстовое поле
+textBox.Visible = true
+currentTextBox = textBox
 end)
 
--- добавляем обработку удаления вкладки
 closeButton.MouseButton1Click:Connect(function()
--- Удаляем вкладку и текстовое поле
 tabButton:Destroy()
 closeButton:Destroy()
 textBox:Destroy()
-tabTextBoxes[tabCount] = nil
-
--- Переупорядочиваем оставшиеся вкладки
+table.remove(tabTextBoxes, tabIndex)
 tabCount = tabCount - 1
-local index = 1
-for _, btn in ipairs(TabsFrame:GetChildren()) do
-if btn:IsA("TextButton") and btn ~= AddTabButton then
-btn.Position = UDim2.new(0, 0, (index - 1) * 0.15, 0)
-btn.Text = "Tab " .. index
-index = index + 1
-end
-end
+updateTabPositions()
 end)
 
--- сохраняем текстовое поле в таблицу
-table.insert(tabTextBoxes, textBox)
+updateTabPositions()
 end
 
--- добавляем первую вкладку
 createNewTab()
--- функции нажатия кнопок управления скриптами
--- исполнение скрипта из активного текстового поля
+
 ExecuteButton.MouseButton1Click:Connect(function()
 if currentTextBox then
 local scriptText = currentTextBox.Text
 local success, errorMsg = pcall(function()
-loadstring(scriptText)() -- Исполняем скрипт
+loadstring(scriptText)()
 end)
 if not success and errorMsg then
 warn("Error executing the script: ", errorMsg)
@@ -193,19 +183,15 @@ end
 end
 end)
 
--- очистка активного текстового поля
 RemoveButton.MouseButton1Click:Connect(function()
 if currentTextBox then
-currentTextBox.Text = "" -- Очищаем текст
+currentTextBox.Text = ""
 end
 end)
 
--- добавление новой вкладки
 AddTabButton.MouseButton1Click:Connect(function()
 createNewTab()
 end)
-
--- закрытие GUI
 CloseButton.MouseButton1Click:Connect(function()
-ScreenGui:Destroy() -- Удаление всего GUI
+ScreenGui:Destroy()
 end)
