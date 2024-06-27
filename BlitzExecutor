@@ -49,7 +49,6 @@ local TitleBar = Instance.new("TextLabel")
 local CloseButton = Instance.new("TextButton")
 local TabsFrame = Instance.new("Frame")
 local AddTabButton = Instance.new("TextButton")
-local ErrorLabel = Instance.new("TextLabel")
 
 -- устанавливаем свойства основного GUI
 ScreenGui.Parent = game.CoreGui
@@ -95,126 +94,114 @@ AddTabButton.Text = "+"
 AddTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 AddTabButton.TextScaled = true
 
-ErrorLabel.Parent = Frame
-ErrorLabel.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-ErrorLabel.BackgroundTransparency = 1
-ErrorLabel.Position = UDim2.new(0, 0, 0.025, 0)
-ErrorLabel.Size = UDim2.new(1, 0, 0.05, 0)
-ErrorLabel.Text = "Cannot create more tabs!"
-ErrorLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-ErrorLabel.TextScaled = true
-ErrorLabel.Visible = false
-
 ExecuteButton.Parent = Frame
 ExecuteButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 ExecuteButton.Position = UDim2.new(0.2, 0, 0.85, 0)
 ExecuteButton.Size = UDim2.new(0.25, 0, 0.1, 0)
 ExecuteButton.Text = "Execute"
+ExecuteButton.Visible = false
 
 RemoveButton.Parent = Frame
 RemoveButton.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
 RemoveButton.Position = UDim2.new(0.55, 0, 0.85, 0)
 RemoveButton.Size = UDim2.new(0.25, 0, 0.1, 0)
 RemoveButton.Text = "Remove"
+RemoveButton.Visible = false
 
 local tabCount = 0
 local tabTextBoxes = {}
 local currentTextBox
 
+-- функция для обновления позиции вкладок
 local function updateTabPositions()
-local index = 0
-for i, button in ipairs(TabsFrame:GetChildren()) do
+    for index, button in ipairs(TabsFrame:GetChildren()) do
 if button:IsA("TextButton") and button ~= AddTabButton then
-button.Position = UDim2.new(0, 0, index * 0.2, 0)
-index = index + 1
-end
-end
+            button.Position = UDim2.new(0, 0, (index - 1) * 0.2, 0) -- координаты для вкладок
+        end
+    end
 end
 
 local function createNewTab()
-tabCount = tabCount + 1
-local tabIndex = tabCount
+    tabCount = tabCount + 1
+    local tabIndex = tabCount
 
-local tabButton = Instance.new("TextButton")
-tabButton.Parent = TabsFrame
-tabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-tabButton.Size = UDim2.new(1, -30, 0, 30)
-tabButton.Position = UDim2.new(0, 0, (tabIndex - 1) * 0.2, 0)
-tabButton.Text = "Tab " .. tabIndex
-tabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    local tabButton = Instance.new("TextButton")
+    tabButton.Parent = TabsFrame
+    tabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    tabButton.Size = UDim2.new(1, -30, 0, 30)
+    tabButton.Text = "Tab " .. tabIndex
+    tabButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- белый цвет текста
 
-local closeButton = Instance.new("TextButton")
-closeButton.Parent = tabButton
-closeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-closeButton.Size = UDim2.new(0, 25, 0, 30)
-closeButton.Position = UDim2.new(1, 0, 0, 0)
-closeButton.Text = "X"
-closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    local closeButton = Instance.new("TextButton")
+    closeButton.Parent = tabButton
+    closeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    closeButton.Size = UDim2.new(0, 25, 0, 30)
+    closeButton.Position = UDim2.new(1, 0, 0, 0)
+    closeButton.Text = "X"
+    closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeButton.Name = "CloseButton"
 
-local textBox = Instance.new("TextBox")
-textBox.Parent = Frame
-textBox.BackgroundColor3 = Color3.fromRGB(245, 245, 245)
-textBox.Size = UDim2.new(0.75, 0, 0.55, 0)
-textBox.Position = UDim2.new(0.2, 0, 0.2, 0)
-textBox.TextXAlignment = Enum.TextXAlignment.Left
-textBox.TextYAlignment = Enum.TextYAlignment.Top
-textBox.Visible = false
+    local textBox = Instance.new("TextBox")
+    textBox.Parent = Frame
+    textBox.BackgroundColor3 = Color3.fromRGB(128, 0, 128) -- Фиолетовый цвет
+    textBox.Size = UDim2.new(0.75, 0, 0.55, 0)
+    textBox.Position = UDim2.new(0.2, 0, 0.2, 0)
+    textBox.TextColor3 = Color3.fromRGB(255, 255, 255) -- белый цвет текста
+    textBox.TextXAlignment = Enum.TextXAlignment.Left
+    textBox.TextYAlignment = Enum.TextYAlignment.Top
+    textBox.Visible = false
 
-tabTextBoxes[tabIndex] = textBox
-tabButton.MouseButton1Click:Connect(function()
-for _, box in pairs(tabTextBoxes) do
-box.Visible = false
+    tabTextBoxes[tabIndex] = textBox
+    tabButton.MouseButton1Click:Connect(function()
+        for _, box in pairs(tabTextBoxes) do
+            box.Visible = false
+        end
+        textBox.Visible = true
+        currentTextBox = textBox
+        ExecuteButton.Visible = true
+        RemoveButton.Visible = true
+    end)
+
+    closeButton.MouseButton1Click:Connect(function()
+        tabButton:Destroy()
+        textBox:Destroy()
+        tabCount = tabCount - 1
+        table.remove(tabTextBoxes, tabIndex)
+        updateTabPositions()
+
+        if tabCount == 0 then
+            ExecuteButton.Visible = false
+            RemoveButton.Visible = false
+        end
+    end)
+
+    updateTabPositions()
 end
-textBox.Visible = true
-currentTextBox = textBox
-ExecuteButton.Visible = true
-RemoveButton.Visible = true
-end)
 
-closeButton.MouseButton1Click:Connect(function()
-tabButton:Destroy()
-textBox:Destroy()
-tabCount = tabCount - 1
-table.remove(tabTextBoxes, tabIndex)
-updateTabPositions()
-end)
-
-updateTabPositions()
-end
 createNewTab()
 
 ExecuteButton.MouseButton1Click:Connect(function()
-if currentTextBox then
-local scriptText = currentTextBox.Text
-local success, errorMsg = pcall(function()
-loadstring(scriptText)()
-end)
-if not success and errorMsg then
-warn("Error executing the script: ", errorMsg)
-end
-end
+    if currentTextBox then
+        local scriptText = currentTextBox.Text
+        local success, errorMsg = pcall(function()
+            loadstring(scriptText)()
+        end)
+        if not success and errorMsg then
+            warn("Error executing the script: ", errorMsg)
+        end
+    end
 end)
 
 RemoveButton.MouseButton1Click:Connect(function()
-if currentTextBox then
-currentTextBox.Text = ""
-end
+    if currentTextBox then
+        currentTextBox.Text = ""
+    end
 end)
 
 AddTabButton.MouseButton1Click:Connect(function()
-if tabCount < 10 then
-createNewTab()
-else
-ErrorLabel.Visible = true
-wait(2)
-ErrorLabel.Visible = false
-end
+    createNewTab()
 end)
 
 CloseButton.MouseButton1Click:Connect(function()
-ScreenGui:Destroy()
+    ScreenGui:Destroy()
 end)
-
--- Скрываем кнопки Execute и Remove по умолчанию
-ExecuteButton.Visible = false
-RemoveButton.Visible = false
