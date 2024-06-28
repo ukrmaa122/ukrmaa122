@@ -151,33 +151,31 @@ closeButton.Text = "X"
 closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 closeButton.Name = "CloseButton"
 
+local ScrollFrame = Instance.new("ScrollingFrame")
+ScrollFrame.Parent = Frame
+ScrollFrame.BackgroundColor3 = Color3.fromRGB(128, 0, 128) -- фиолетовый цвет
+ScrollFrame.Size = UDim2.new(0.75, 0, 0.55, 0)
+ScrollFrame.Position = UDim2.new(0.2, 0, 0.2, 0)
+ScrollFrame.ScrollBarThickness = 12
+ScrollFrame.Visible = false
+
 local textBox = Instance.new("TextBox")
-textBox.Parent = Frame
-textBox.BackgroundColor3 = Color3.fromRGB(128, 0, 128) -- Фиолетовый цвет
-textBox.Size = UDim2.new(0.75, 0, 0.55, 0)
-textBox.Position = UDim2.new(0.2, 0, 0.2, 0)
-textBox.TextColor3 = Color3.fromRGB(255, 255, 255) -- Белый цвет текста
+textBox.Parent = ScrollFrame
+textBox.BackgroundTransparency = 1
+textBox.Size = UDim2.new(1, 0, 1, 0)
+textBox.TextColor3 = Color3.fromRGB(255, 255, 255) -- белый цвет текста
 textBox.TextXAlignment = Enum.TextXAlignment.Left
 textBox.TextYAlignment = Enum.TextYAlignment.Top
-textBox.MultiLine = true -- Разрешить несколько строк
-textBox.ClearTextOnFocus = false -- Текст не стирается при нажатии
-textBox.TextWrapped = true -- Текст переносится на новую строку
-textBox.TextEditable = true
-textBox.TextStrokeTransparency = 1
+textBox.MultiLine = true
+textBox.ClearTextOnFocus = false
+textBox.TextWrapped = false
 
--- Добавление прокрутки
-local UIScrollingFrame = Instance.new("ScrollingFrame")
-UIScrollingFrame.Parent = textBox
-UIScrollingFrame.Size = UDim2.new(1, 0, 1, 0)
-UIScrollingFrame.CanvasSize = UDim2.new(0, 0, 5, 0)
-UIScrollingFrame.ScrollBarThickness = 10
-
-tabTextBoxes[tabIndex] = textBox
+tabTextBoxes[tabIndex] = ScrollFrame
 tabButton.MouseButton1Click:Connect(function()
 for _, box in pairs(tabTextBoxes) do
 box.Visible = false
 end
-textBox.Visible = true
+ScrollFrame.Visible = true
 currentTextBox = textBox
 ExecuteButton.Visible = true
 RemoveButton.Visible = true
@@ -185,7 +183,7 @@ end)
 
 closeButton.MouseButton1Click:Connect(function()
 tabButton:Destroy()
-textBox:Destroy()
+ScrollFrame:Destroy()
 tabCount = tabCount - 1
 table.remove(tabTextBoxes, tabIndex)
 updateTabPositions()
@@ -242,6 +240,7 @@ ToggleButton.Position = UDim2.new(0, 100, 0, 100) -- можно изменить
 ToggleButton.Text = "Toggle UI"
 ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 ToggleButton.Draggable = true
+
 -- функция переключения видимости основного UI
 ToggleButton.MouseButton1Click:Connect(function()
 Frame.Visible = not Frame.Visible
