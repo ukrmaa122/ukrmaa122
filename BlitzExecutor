@@ -45,20 +45,22 @@ local Frame = Instance.new("Frame")
 local UIGradient = Instance.new("UIGradient")
 local ExecuteButton = Instance.new("TextButton")
 local RemoveButton = Instance.new("TextButton")
+local MainButton = Instance.new("TextButton")
 local TitleBar = Instance.new("TextLabel")
 local CloseButton = Instance.new("TextButton")
 local TabsFrame = Instance.new("Frame")
 local AddTabButton = Instance.new("TextButton")
+local MainTabsFrame = Instance.new("Frame")
 
--- устанавливаем свойства основного GUI
+-- создаем основной UI frame
 ScreenGui.Parent = game.CoreGui
-
 Frame.Parent = ScreenGui
 Frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 Frame.Position = UDim2.new(0.35, 0, 0.3, 0)
 Frame.Size = UDim2.new(0, 400, 0, 250)
 Frame.Active = true
 Frame.Draggable = true
+Frame.Visible = true -- по умолчанию видимый
 
 -- добавляем градиент
 UIGradient.Parent = Frame
@@ -108,100 +110,129 @@ RemoveButton.Size = UDim2.new(0.25, 0, 0.1, 0)
 RemoveButton.Text = "Remove"
 RemoveButton.Visible = false
 
+-- создаем вкладку main
+local MainTabButton = Instance.new("TextButton")
+MainTabButton.Parent = TabsFrame
+MainTabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+MainTabButton.Size = UDim2.new(1, -30, 0, 30)
+MainTabButton.Text = "Main"
+MainTabButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- белый цвет текста
+
+-- функции для управления вкладками и перезапуска скрипта
 local tabCount = 0
 local tabTextBoxes = {}
 local currentTextBox
 
--- функция для обновления позиции вкладок
 local function updateTabPositions()
-    for index, button in ipairs(TabsFrame:GetChildren()) do
-if button:IsA("TextButton") and button ~= AddTabButton then
-            button.Position = UDim2.new(0, 0, (index - 1) * 0.2, 0) -- координаты для вкладок
-        end
-    end
+for index, button in ipairs(TabsFrame:GetChildren()) do
+if button:IsA("TextButton") and button ~= AddTabButton and button ~= MainTabButton then
+button.Position = UDim2.new(0, 0, (index - 1) * 0.2, 0)
+end
+end
 end
 
 local function createNewTab()
-    tabCount = tabCount + 1
-    local tabIndex = tabCount
+tabCount = tabCount + 1
+local tabIndex = tabCount
 
-    local tabButton = Instance.new("TextButton")
-    tabButton.Parent = TabsFrame
-    tabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    tabButton.Size = UDim2.new(1, -30, 0, 30)
-    tabButton.Text = "Tab " .. tabIndex
-    tabButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- белый цвет текста
+local tabButton = Instance.new("TextButton")
+tabButton.Parent = TabsFrame
+tabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+tabButton.Size = UDim2.new(1, -30, 0, 30)
+tabButton.Text = "Tab " .. tabIndex
+tabButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- белый цвет текста
 
-    local closeButton = Instance.new("TextButton")
-    closeButton.Parent = tabButton
-    closeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-    closeButton.Size = UDim2.new(0, 25, 0, 30)
-    closeButton.Position = UDim2.new(1, 0, 0, 0)
-    closeButton.Text = "X"
-    closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    closeButton.Name = "CloseButton"
+local closeButton = Instance.new("TextButton")
+closeButton.Parent = tabButton
+closeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+closeButton.Size = UDim2.new(0, 25, 0, 30)
+closeButton.Position = UDim2.new(1, 0, 0, 0)
+closeButton.Text = "X"
+closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeButton.Name = "CloseButton"
 
-    local textBox = Instance.new("TextBox")
-    textBox.Parent = Frame
-    textBox.BackgroundColor3 = Color3.fromRGB(128, 0, 128) -- Фиолетовый цвет
-    textBox.Size = UDim2.new(0.75, 0, 0.55, 0)
-    textBox.Position = UDim2.new(0.2, 0, 0.2, 0)
-    textBox.TextColor3 = Color3.fromRGB(255, 255, 255) -- белый цвет текста
-    textBox.TextXAlignment = Enum.TextXAlignment.Left
-    textBox.TextYAlignment = Enum.TextYAlignment.Top
-    textBox.Visible = false
+local textBox = Instance.new("TextBox")
+textBox.Parent = Frame
+textBox.BackgroundColor3 = Color3.fromRGB(128, 0, 128) -- Фиолетовый цвет
+textBox.Size = UDim2.new(0.75, 0, 0.55, 0)
+textBox.Position = UDim2.new(0.2, 0, 0.2, 0)
+textBox.TextColor3 = Color3.fromRGB(255, 255, 255) -- Белый цвет текста
+textBox.TextXAlignment = Enum.TextXAlignment.Left
+textBox.TextYAlignment = Enum.TextYAlignment.Top
+textBox.Visible = false
 
-    tabTextBoxes[tabIndex] = textBox
-    tabButton.MouseButton1Click:Connect(function()
-        for _, box in pairs(tabTextBoxes) do
-            box.Visible = false
-        end
-        textBox.Visible = true
-        currentTextBox = textBox
-        ExecuteButton.Visible = true
-        RemoveButton.Visible = true
-    end)
-
-    closeButton.MouseButton1Click:Connect(function()
-        tabButton:Destroy()
-        textBox:Destroy()
-        tabCount = tabCount - 1
-        table.remove(tabTextBoxes, tabIndex)
-        updateTabPositions()
-
-        if tabCount == 0 then
-            ExecuteButton.Visible = false
-            RemoveButton.Visible = false
-        end
-    end)
-
-    updateTabPositions()
+tabTextBoxes[tabIndex] = textBox
+tabButton.MouseButton1Click:Connect(function()
+for _, box in pairs(tabTextBoxes) do
+box.Visible = false
 end
+textBox.Visible = true
+currentTextBox = textBox
+ExecuteButton.Visible = true
+RemoveButton.Visible = true
+end)
+
+closeButton.MouseButton1Click:Connect(function()
+tabButton:Destroy()
+textBox:Destroy()
+tabCount = tabCount - 1
+table.remove(tabTextBoxes, tabIndex)
+updateTabPositions()
+
+if tabCount == 0 then
+ExecuteButton.Visible = false
+RemoveButton.Visible = false
+end
+end)
+
+updateTabPositions()
+end
+
+-- Убедитесь, что Main таб не будет удаляться
+MainTabButton.MouseButton1Click:Connect(function()
+-- Логика для основного таба
+end)
 
 createNewTab()
 
 ExecuteButton.MouseButton1Click:Connect(function()
-    if currentTextBox then
-        local scriptText = currentTextBox.Text
-        local success, errorMsg = pcall(function()
-            loadstring(scriptText)()
-        end)
-        if not success and errorMsg then
-            warn("Error executing the script: ", errorMsg)
-        end
-    end
+if currentTextBox then
+local scriptText = currentTextBox.Text
+local success, errorMsg = pcall(function()
+loadstring(scriptText)()
+end)
+if not success and errorMsg then
+warn("Error executing the script: ", errorMsg)
+end
+end
 end)
 
 RemoveButton.MouseButton1Click:Connect(function()
-    if currentTextBox then
-        currentTextBox.Text = ""
-    end
+if currentTextBox then
+currentTextBox.Text = ""
+end
 end)
 
 AddTabButton.MouseButton1Click:Connect(function()
-    createNewTab()
+createNewTab()
 end)
 
 CloseButton.MouseButton1Click:Connect(function()
-    ScreenGui:Destroy()
+ScreenGui:Destroy()
+end)
+
+-- создаем переносимую кнопку для переключения видимости основного UI
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Parent = ScreenGui
+ToggleButton.BackgroundColor3 = Color3.fromRGB(125, 125, 125)
+ToggleButton.BackgroundTransparency = 0.5
+ToggleButton.Size = UDim2.new(0, 30, 0, 30)
+ToggleButton.Position = UDim2.new(0, 100, 0, 100) -- можно изменить начальную позицию
+ToggleButton.Text = "Toggle UI"
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.Draggable = true
+
+-- функция переключения видимости основного UI
+ToggleButton.MouseButton1Click:Connect(function()
+Frame.Visible = not Frame.Visible
 end)
