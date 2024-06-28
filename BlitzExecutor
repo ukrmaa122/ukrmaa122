@@ -159,7 +159,18 @@ textBox.Position = UDim2.new(0.2, 0, 0.2, 0)
 textBox.TextColor3 = Color3.fromRGB(255, 255, 255) -- Белый цвет текста
 textBox.TextXAlignment = Enum.TextXAlignment.Left
 textBox.TextYAlignment = Enum.TextYAlignment.Top
-textBox.Visible = false
+textBox.MultiLine = true -- Разрешить несколько строк
+textBox.ClearTextOnFocus = false -- Текст не стирается при нажатии
+textBox.TextWrapped = true -- Текст переносится на новую строку
+textBox.TextEditable = true
+textBox.TextStrokeTransparency = 1
+
+-- Добавление прокрутки
+local UIScrollingFrame = Instance.new("ScrollingFrame")
+UIScrollingFrame.Parent = textBox
+UIScrollingFrame.Size = UDim2.new(1, 0, 1, 0)
+UIScrollingFrame.CanvasSize = UDim2.new(0, 0, 5, 0)
+UIScrollingFrame.ScrollBarThickness = 10
 
 tabTextBoxes[tabIndex] = textBox
 tabButton.MouseButton1Click:Connect(function()
@@ -231,7 +242,6 @@ ToggleButton.Position = UDim2.new(0, 100, 0, 100) -- можно изменить
 ToggleButton.Text = "Toggle UI"
 ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 ToggleButton.Draggable = true
-
 -- функция переключения видимости основного UI
 ToggleButton.MouseButton1Click:Connect(function()
 Frame.Visible = not Frame.Visible
