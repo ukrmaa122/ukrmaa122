@@ -136,8 +136,8 @@ notificationLabel.Text = message
 notificationLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 notificationLabel.TextScaled = true
 
--- скрываем уведомление через 4 секунды
-delay(4, function()
+-- скрываем уведомление через 2 секунды
+delay(2, function()
 notificationFrame:Destroy()
 end)
 end
