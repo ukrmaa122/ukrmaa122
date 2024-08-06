@@ -1,0 +1,135 @@
+local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local Player = Players.LocalPlayer
+local Character = Player.Character or Player.CharacterAdded:Wait()
+
+local Window = OrionLib:MakeWindow({
+Name = "BABFT - UKRMAN",
+HidePremium = false,
+SaveConfig = true,
+ConfigFolder = "OrionConfig"
+})
+
+local mainTab = Window:MakeTab({
+Name = "Main",
+Icon = "rbxassetid://4483345998",
+PremiumOnly = false
+})
+
+mainTab:AddSection({
+Name = "Auto Farm Settings"
+})
+
+local autoFarmActive = false
+local interval = 0.5
+
+local teleportCoordinates = {
+{x = -45, y = 83, z = 1361},
+{x = -91, y = 60, z = 2131},
+{x = -62, y = 51, z = 2901},
+{x = -70, y = 71, z = 3671},
+{x = -50, y = 66, z = 4442},
+{x = -67, y = 71, z = 5212},
+{x = -84, y = 54, z = 5982},
+{x = -73, y = 99, z = 6751},
+{x = -50, y = 33, z = 7523},
+{x = -62, y = 63, z = 8292},
+{x = -54, y = -352, z = 9490}
+}
+
+local function teleportTo(position, withPlatform)
+if withPlatform then
+local platform = Instance.new("Part")
+platform.Size = Vector3.new(10, 1, 10)
+platform.Anchored = true
+platform.CFrame = CFrame.new(position.x, position.y - 3, position.z)
+platform.Parent = workspace
+
+-- Удаляем платформу через 1 секунду
+delay(1, function()
+platform:Destroy()
+end)
+end
+
+Character:SetPrimaryPartCFrame(CFrame.new(position.x, position.y, position.z))
+end
+
+local function autoFarm()
+while autoFarmActive do
+for i, pos in ipairs(teleportCoordinates) do
+if not autoFarmActive then break end
+teleportTo(pos, i < #teleportCoordinates)
+wait(interval)
+end
+
+if not autoFarmActive then break end
+
+-- Ждем, пока игрок сам умрет на последней точке
+local humanoid = Character:FindFirstChildOfClass("Humanoid")
+if humanoid then
+repeat
+wait(1)
+until humanoid.Health <= 0
+end
+
+if not autoFarmActive then break end
+
+-- Ждем возрождения игрока
+Character = Player.CharacterAdded:Wait()
+-- Ждем 2 секунды перед новым циклом
+wait(2)
+end
+end
+
+mainTab:AddToggle({
+Name = "Auto farm",
+Default = false,
+Callback = function(Value)
+autoFarmActive = Value
+if autoFarmActive then
+autoFarm()
+end
+end
+})
+
+mainTab:AddTextbox({
+Name = "Interval",
+Default = "0.5",
+TextDisappear = false,
+Callback = function(Value)
+interval = tonumber(Value) or 0.5
+end
+})
+
+-- Новая вкладка "Teleports"
+local teleportTab = Window:MakeTab({
+Name = "Teleports",
+Icon = "rbxassetid://4483345998",
+PremiumOnly = false
+})
+
+teleportTab:AddButton({
+Name = "Tp To Chest",
+Callback = function()
+teleportTo({x = -53, y = -360, z = 9489}, false)
+end
+})
+
+-- Новая вкладка "Bypass"
+local bypassTab = Window:MakeTab({
+Name = "Bypass",
+Icon = "rbxassetid://4483345998",
+PremiumOnly = false
+})
+
+Player.CharacterAdded:Connect(function(char)
+Character = char
+if autoFarmActive then
+wait(2) -- Ждем 2 секунды перед запуском
+autoFarm()
+end
+end)
+
+OrionLib:Init()
